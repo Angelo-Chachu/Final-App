@@ -1,29 +1,24 @@
 const express = require("express");
 const cors = require("cors");
 const { connect } = require("mongoose");
-
+var bodyParser = require('body-parser')
+//const rojuter = expressss.Router();
 const app = express();
-
- var corsOptions =
+const router= require("./app/routes/tutorial.routes");
+/*  var corsOptions =
  {
    origin: "http://localhost:8081" 
- };
+ }; */
 
- app.use(cors(corsOptions));
+ app.use(cors());
 
 //Json application
  app.use(express.json());
 
- //URL Application
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }))
 
- app.use(express.urlencoded({extended : true}));
-
- //Simple Route
-
- app.get("/",(req,res) => {
-     res.json({message: "Welcome to bezkoder application."})
- });
-  
+ //connecting to mongodb
  const db = require("./app/models");
  db.mongoose
    .connect(db.url, {
@@ -37,9 +32,17 @@ const app = express();
      console.log("Cannot connect to the database!", err);
      process.exit();
    });
- //set port,listen for requests
 
- const PORT = process.env.PORT || 8000;
+ //Simple Route
+app.use("/api/tutorials",router);
+
+app.get("/",(req,res) => {
+    res.json({message: "Welcome to bezkoder application."})
+});
+
+//set port,listen for requests
+
+ const PORT = process.env.PORT || 8081;
  app.listen(PORT,() => {
  console.log(`server is running on port ${PORT}.`);
  });

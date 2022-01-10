@@ -1,32 +1,33 @@
-module.exports = app =>{
-    const tutorials = require("../ontrollers/tutorials.controllers.js"),
+var tutorialsController= require("../controllers/tutorial.controllers");
 
-    var router = require("express").Router();
+var express = require("express");
+var router = express.Router();
 
-    //Create a new tutorial
 
-    router.post("/,tutorials.create");
+//test router
+//Retrieve all published tutorials
 
-    //Retrieve all tutorials
+router.get("/published",tutorialsController.findAllPublished);
 
-    router.get("/",tutorials.findAll);
+//Create a new tutorial
+    
+router.post("/create",tutorialsController.create);
 
-   //Retrieve all published tutorials
+//Retrieve all tutorials
+   
+router.get("/",tutorialsController.findAll);
 
-   router.get("/published",tutorials.findAllPublished);
+//retrieve a single tutorial with id
 
-   //retrieve a single tutorial with id
+router.get("/:id",tutorialsController.findOne);
 
-   router.get("/:id",tutorials.findOne);
-
-   //Update a tutorial with id
-   router.put("/:id",tutorials.update);
+//Update a tutorial with id
+router.put("/:id",tutorialsController.update);
 
    //Delete a tutorial with id
-   router.delete(":id",tutorials.delete);
+router.delete("/:id",tutorialsController.delete);
 
-   //Create a new Tutorial
-   router.delete("/",tutorials.deleteAll);
+//Create a new Tutorial
+router.delete("/",tutorialsController.deleteAll); 
 
-   app.use('/api/tutorials',router);
-};
+module.exports = router;

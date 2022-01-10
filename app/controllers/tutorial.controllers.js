@@ -19,7 +19,7 @@ exports.create = (req,res) => {
     const tutorial = new Tutorial({
         title: req.body.title,
         description: req.body.description,
-        published: req.body.description? req.body.description : false
+        published: req.published ? req.body.published : false
 
     });
 
@@ -42,8 +42,8 @@ exports.create = (req,res) => {
 //Retrieve alltutorials from the database
 
 exports.findAll  = (req,res) => {
-    const title = req.query.title,
-    var condition = title ? {title: {$regex: new RegExp(title), $options: "i"} } :{};
+    const title = req.query.title;
+    const condition = title ? {title: {$regex: new RegExp(title), $options: "i"} } :{};
     Tutorial.find(condition)
     .then(data =>{
         res.send(data);
@@ -59,7 +59,7 @@ exports.findAll  = (req,res) => {
 //Find a single tutorial with id
 
 exports.findOne = (req,res) => {
-    const id = req.id.params.id;
+    const id = req.params.id;
 
     Tutorial.findById(id)
     .then(data => {
@@ -83,9 +83,9 @@ exports.findOne = (req,res) => {
              message: "Data to be update can not be empty!"
          });
      }
-     const id = id.params.id;
+     const id = req.params.id;
 
-     Tutorial.findByIdAndUpdate(id.body.req,{useFindAndModify: false})
+     Tutorial.findByIdAndUpdate(id,req.body,{useFindAndModify: false})
      .then(data => {
          if(!data)
          {
@@ -93,7 +93,7 @@ exports.findOne = (req,res) => {
                  message:'Cannot update tutorial with id =${id}.Mybe thge tutorial was not faund!'
              })
          }
-          else res.send({message: "Tiutorial was updated successfully."})
+          else res.send({message: "Tiutorial was updated successfully.",data:data})
      })
      .catch(err =>{
          res.status(500).send({
@@ -101,11 +101,11 @@ exports.findOne = (req,res) => {
          });
      });
  };
-
- //Delete all the tutorials from the database
-
- exports.delete = (req,res) =>{
-    //  const id = req.params.id;
+//delete one
+exports.delete =(req,res)=>{
+    console.log(req);
+    ///res.send({message:req});
+      //  const id = req.params.id;
 
     //  Tutorial.findByIdAndRemove(id)
     //  .then(data => {
@@ -125,6 +125,11 @@ exports.findOne = (req,res) => {
     //           message:"could not delete Tutorial with id" + id
     //       });
     //   });
+}
+ //Delete all the tutorials from the database
+
+ exports.deleteAll = (req,res) =>{
+ 
     Tutorial.deleteMany({})
     .then(data =>{
         res.send({
@@ -143,7 +148,7 @@ exports.findOne = (req,res) => {
 
 exports.findAllPublished = (req,res) =>{
     Tutorial.find({published:true})
-    .then(dats =>{
+    .then(data =>{
         res.send(data);
     })
     .catch(err =>{
