@@ -34,8 +34,13 @@ db.mongoose
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to bezkoder application." });
 });
-app.use("/api/tutorials",tutorialRouter);
+
+app.get("/chachulani", (req, res) => {
+  res.json({ message: "Welcome chachulani." });
+});
+
 //require("./app/routes/tutorial.routes")(app);
+require("./app/routes/tutorial.routes.js")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;
